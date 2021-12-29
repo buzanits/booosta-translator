@@ -23,6 +23,7 @@ trait Base
 
   public function get_lang()
   {
+    $lang = null;
     if(isset($_SESSION['LANG'])) $lang = $_SESSION['LANG'];
     if($lang === null) $lang = $this->config('language');
     if($lang === null) $lang = 'en';
