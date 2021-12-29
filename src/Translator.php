@@ -83,8 +83,8 @@ class Translator extends \booosta\base\Module
       foreach($this->usertype_allowed_map as $type=>$tr)
         if(is_object($obj) && $obj->usertype_allowed($type, false)) $this->map = array_merge($this->map, $tr);
 
-    if(isset($this->usertype_map_link[$_SESSION['act_usertype']])) $this->map = array_merge($this->map, $this->usertype_map[$this->usertype_map_link[$_SESSION['act_usertype']]]);
-    if(isset($this->usertype_map[$_SESSION['act_usertype']])) $this->map = array_merge($this->map, $this->usertype_map[$_SESSION['act_usertype']]);
+    if(isset($this->usertype_map_link[$_SESSION['act_usertype'] ?? null])) $this->map = array_merge($this->map, $this->usertype_map[$this->usertype_map_link[$_SESSION['act_usertype']]]);
+    if(isset($this->usertype_map[$_SESSION['act_usertype'] ?? null])) $this->map = array_merge($this->map, $this->usertype_map[$_SESSION['act_usertype']]);
   }
 
   public function __invoke($param) { return $this->t($param); }
