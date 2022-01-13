@@ -22,9 +22,11 @@ class Translator extends \booosta\base\Module
   public function t($key)
   {
     if(!is_array($this->map)) $this->read_map();
-    if(!is_array($this->map) && is_object($this->topobj) && is_a("\\booosta\\webapp\\webapp")) 
-      $this->topobj->raise_error("no map for '$key'");
-
+    if(!is_array($this->map) && is_object($this->topobj) && is_a($this->topobj, "\\booosta\\webapp\\webapp")):
+      #$this->topobj->raise_error("no map for '$key'", null, false);   // false = no translation
+      \booosta\Framework::debug("no translator map for '$key'");
+      return $key;
+    endif;
 
     if(is_array($this->map)):
       if(isset($this->map[$key])) return $this->map[$key];
@@ -32,7 +34,7 @@ class Translator extends \booosta\base\Module
       if(isset($this->map[lcfirst($key)])) return ucfirst($this->map[lcfirst($key)]);
     endif;
 
-    #\booosta\debug("key: $key"); \booosta\debug($this->map);
+    #\booosta\Framework::debug("key: $key"); \booosta\Framework::debug($this->map);
     return $key;
   }
 
@@ -64,10 +66,13 @@ class Translator extends \booosta\base\Module
         $this->merge_usertype();
       endif;
     else:
-      #\booosta\debug('no merge');
-      if($this->map_path && is_readable("$this->map_path/$this->map")) include("$this->map_path/$this->map");
+      #\booosta\Framework::debug('no merge');
+      #\booosta\Framework::debug(getcwd());
+      #\booosta\Framework::debug("$this->map_path/lang.$this->lang");
+      if($this->map_path && !is_dir("$this->map_path/$this->map") && is_readable("$this->map_path/$this->map")) 
+        include("$this->map_path/$this->map");
       elseif(is_readable("$this->map_path/lang.$this->lang")) include("$this->map_path/lang.$this->lang");
-      elseif(is_readable($this->map)) include($this->map);
+      elseif(is_readable($this->map) && !is_dir($this->map)) include($this->map);
       elseif(is_readable("lang.$this->lang")) include("lang.$this->lang");
       else $this->map = [];
 
