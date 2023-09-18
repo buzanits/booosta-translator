@@ -1,6 +1,8 @@
 <?php
 namespace booosta\translator;
-\booosta\Framework::init_module('translator');
+
+use \booosta\Framework as b;
+b::init_module('translator');
 
 class Translator extends \booosta\base\Module
 {
@@ -49,6 +51,12 @@ class Translator extends \booosta\base\Module
         $this->merge_usertype();
       endif;
 
+      if(is_readable("tpl/lang-{$this->lang}/map.php")):
+        #b::debug("tpl/lang-{$this->lang}/map.php");
+        include("tpl/lang-{$this->lang}/map.php");
+        $this->merge_usertype();
+      endif;
+
       if($mapfile):
         include($mapfile);
         $this->merge_usertype();
@@ -74,6 +82,7 @@ class Translator extends \booosta\base\Module
       elseif(is_readable("$this->map_path/lang.$this->lang")) include("$this->map_path/lang.$this->lang");
       elseif(is_readable($this->map) && !is_dir($this->map)) include($this->map);
       elseif(is_readable("lang.$this->lang")) include("lang.$this->lang");
+      elseif(is_readable("tpl/lang-{$this->lang}/map.php")) include("tpl/lang-{$this->lang}/map.php");
       else $this->map = [];
 
       $this->merge_usertype();
